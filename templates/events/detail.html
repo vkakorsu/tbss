@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="container">
+  <nav class="small muted" style="margin:8px 0"><a href="{% url 'events:index' %}">← Back to events</a></nav>
+  <h1>{{ event.title }}</h1>
+  <p class="muted small">{{ event.start_at|date:"M j, Y H:i" }}{% if event.location %} · {{ event.location }}{% endif %}</p>
+  {% if event.image %}
+    <img src="{{ event.image.url }}" alt="{{ event.title }}" style="width:100%;max-width:760px;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.08);margin:8px 0">
+  {% endif %}
+  {% if event.excerpt %}
+    <p class="muted">{{ event.excerpt }}</p>
+  {% endif %}
+  <article class="prose">{{ event.description|linebreaks }}</article>
+</section>
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends "admin/base_site.html" %}
+{% block content %}
+<h1>Bulk import books via CSV</h1>
+<p>Upload a CSV with columns: title,isbn,price,stock,description,publisher,authors,genres,tags. Multiple authors/genres/tags separated by semicolons.</p>
+<form method="post" enctype="multipart/form-data" novalidate>
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit" class="default">Upload</button>
+  <a href=".." class="button">Back</a>
+</form>
+{% endblock %}

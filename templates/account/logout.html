@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="container" style="max-width:560px">
+  <h1>Sign out</h1>
+  <p class="muted">Are you sure you want to sign out?</p>
+  <form method="post" action="{% url 'account_logout' %}" style="display:flex;gap:8px;margin-top:12px">
+    {% csrf_token %}
+    <button class="btn" type="submit">Logout</button>
+    <a class="btn" href="/" style="background:var(--brand-2);color:var(--ink)">Cancel</a>
+  </form>
+</section>
+{% endblock %}

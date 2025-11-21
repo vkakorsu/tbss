@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="container">
+  <h1>Your Profile</h1>
+  <form action="" method="post" style="display:grid;gap:12px;max-width:640px;margin-top:12px">
+    {% csrf_token %}
+    <input type="tel" name="phone" placeholder="Phone" value="{{ profile.phone }}">
+    <input type="text" name="address_line1" placeholder="Address line 1" value="{{ profile.address_line1 }}">
+    <input type="text" name="address_line2" placeholder="Address line 2" value="{{ profile.address_line2 }}">
+    <div style="display:grid;gap:8px;grid-template-columns:1fr 1fr">
+      <input type="text" name="city" placeholder="City/Town" value="{{ profile.city }}">
+      <input type="text" name="region" placeholder="Region" value="{{ profile.region }}">
+    </div>
+    <button class="btn" type="submit">Save</button>
+  </form>
+</section>
+{% endblock %}

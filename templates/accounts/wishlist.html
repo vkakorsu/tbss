@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="container">
+  <h1>Your Wishlist</h1>
+  <div class="cards" style="margin-top:12px">
+    {% for item in wishlist.items.all %}
+    <article class="card">
+      <a href="{{ item.book.get_absolute_url }}" style="text-decoration:none;color:inherit;display:block">
+        {% if item.book.cover %}
+          <div class="cover" style="background-image:url('{{ item.book.cover.url }}');background-size:cover;background-position:center"></div>
+        {% else %}
+          <div class="cover ph"></div>
+        {% endif %}
+        <h3 style="margin:.5rem 0">{{ item.book.title }}</h3>
+        <p class="muted small">{% for a in item.book.authors.all %}{% if not forloop.first %}, {% endif %}{{ a.name }}{% endfor %}</p>
+        <p><strong>GH₵ {{ item.book.price }}</strong></p>
+      </a>
+      <a class="btn" href="{% url 'accounts:wishlist_remove' item.book.slug %}" style="display:inline-block;margin-top:8px;background:var(--brand-2);color:var(--ink)">Remove</a>
+    </article>
+    {% empty %}
+      <p class="muted">Your wishlist is empty.</p>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

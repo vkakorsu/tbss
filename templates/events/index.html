@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="container">
+  <h1>Events</h1>
+  {% if events %}
+  <div class="cards" style="margin-top:12px">
+    {% for e in events %}
+    <article class="card">
+      {% if e.image %}
+        <img src="{{ e.image.url }}" alt="{{ e.title }}" style="width:100%;height:180px;object-fit:cover;border-radius:8px">
+      {% else %}
+        <div class="cover ph"></div>
+      {% endif %}
+      <h3 style="margin:.5rem 0"><a href="{% url 'events:detail' e.slug %}">{{ e.title }}</a></h3>
+      <p class="muted small">{{ e.start_at|date:"M j, Y H:i" }}{% if e.location %} · {{ e.location }}{% endif %}</p>
+      <p>{{ e.excerpt }}</p>
+    </article>
+    {% endfor %}
+  </div>
+  {% else %}
+    <p class="muted">No upcoming events.</p>
+  {% endif %}
+</section>
+{% endblock %}

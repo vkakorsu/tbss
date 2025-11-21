@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="container">
+  <h1>Checkout</h1>
+  <form action="" method="post" class="checkout-form">
+    {% csrf_token %}
+    <div class="checkout-grid">
+      <div class="checkout-main">
+        <fieldset class="form-card">
+          <legend>Contact</legend>
+          <input type="text" name="full_name" placeholder="Full name" required>
+          <input type="email" name="email" placeholder="Email" required>
+          <input type="tel" name="phone" placeholder="Phone" required>
+        </fieldset>
+
+        <fieldset class="form-card">
+          <legend>Delivery address</legend>
+          <input type="text" name="address_line1" placeholder="Address line 1" required>
+          <input type="text" name="address_line2" placeholder="Address line 2">
+          <div class="grid-2">
+            <input type="text" name="city" placeholder="City/Town" required>
+            <input type="text" name="region" placeholder="Region" required>
+          </div>
+          <textarea name="notes" placeholder="Notes (optional)"></textarea>
+        </fieldset>
+      </div>
+
+      <div class="checkout-side">
+        <fieldset class="form-card">
+          <legend>Payment method</legend>
+          <label class="choice-row">
+            <input type="radio" name="payment_method" value="momo" checked>
+            <span>Mobile Money (MTN/Vodafone/AirtelTigo)</span>
+          </label>
+          <label class="choice-row">
+            <input type="radio" name="payment_method" value="cod">
+            <span>Cash on Delivery</span>
+          </label>
+        </fieldset>
+
+        <fieldset class="form-card">
+          <legend>Delivery method</legend>
+          {% if shipping_methods %}
+            {% for m in shipping_methods %}
+            <label class="choice-row">
+              <input type="radio" name="shipping_method" value="{{ m.id }}" data-fee="{{ m.fee }}" {% if forloop.first %}checked{% endif %}>
+              <span>{{ m.name }} — GH₵ {{ m.fee }} ({{ m.eta_days_min }}–{{ m.eta_days_max }} days)</span>
+            </label>
+            {% endfor %}
+          {% else %}
+            <p class="muted">No delivery methods configured.</p>
+          {% endif %}
+        </fieldset>
+
+        <div class="form-card checkout-summary">
+          <div><strong>Subtotal + delivery: GH₵ <span id="subtotal-plus">{{ subtotal_plus_shipping|default:subtotal }}</span></strong></div>
+          <div class="small muted">Includes delivery fee GH₵ <span id="delivery-fee">{{ default_shipping_fee|default:0 }}</span></div>
+          <div style="margin-top:12px;text-align:right">
+            <button class="btn" type="submit">Place order</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</section>
+<script>
+  (function(){
+    const radios = document.querySelectorAll('input[name="shipping_method"]');
+    const feeEl = document.getElementById('delivery-fee');
+    const totalEl = document.getElementById('subtotal-plus');
+    const base = parseFloat('{{ subtotal }}');
+    function update(){
+      const checked = document.querySelector('input[name="shipping_method"]:checked');
+      const fee = checked ? parseFloat(checked.getAttribute('data-fee')) : 0;
+      feeEl.textContent = fee.toFixed(2);
+      totalEl.textContent = (base + fee).toFixed(2);
+    }
+    radios.forEach(r=>r.addEventListener('change', update));
+    update();
+  })();
+</script>
+{% endblock %}

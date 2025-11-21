@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="container">
+  <h1>Your Cart</h1>
+  {% if items %}
+    <div class="cards" style="margin-top:12px">
+      {% for it in items %}
+      <article class="card" style="display:grid;grid-template-columns:110px 1fr;gap:16px;align-items:center">
+        {% if it.book.cover %}
+          <img src="{{ it.book.cover.url }}" alt="{{ it.book.title }}" style="width:110px;height:150px;object-fit:cover;border-radius:10px">
+        {% else %}
+          <div class="cover ph" style="width:110px;height:150px"></div>
+        {% endif %}
+        <div>
+          <h3 style="margin:.25rem 0">{{ it.book.title }}</h3>
+          <div class="small muted" style="margin-bottom:4px">In stock: {{ it.book.stock }}</div>
+          <div class="qty-control">
+            <a href="{% url 'orders:cart_dec' it.book.slug %}" class="qty-btn" aria-label="Decrease quantity">−</a>
+            <span class="qty-value">{{ it.qty }}</span>
+            <a href="{% url 'orders:cart_add' it.book.slug %}" class="qty-btn" aria-label="Increase quantity">+</a>
+          </div>
+          <p><strong>GH₵ {{ it.line_total }}</strong></p>
+          <a class="btn" href="{% url 'orders:cart_remove' it.book.slug %}" style="background:var(--brand-2);color:var(--ink)">Remove</a>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+    <div style="margin-top:16px;display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px">
+      <div>
+        <strong>Total: GH₵ {{ total }}</strong>
+        <div style="margin-top:8px">
+          <a class="btn" href="/catalog/" style="background:var(--brand-2);color:var(--ink)">Continue shopping</a>
+        </div>
+      </div>
+      <div>
+        <a class="btn" href="{% url 'orders:cart_clear' %}" style="background:var(--brand-2);color:var(--ink)">Clear cart</a>
+        <a class="btn" href="{% url 'orders:checkout' %}">Checkout</a>
+      </div>
+    </div>
+  {% else %}
+    <p class="muted">Your cart is empty.</p>
+  {% endif %}
+</section>
+{% endblock %}

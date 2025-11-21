@@ -1,0 +1,16 @@
+Thank you for your order from Torchbearers Books & Stationery Services (TBSS)!
+
+Order: #{{ order.order_number }}
+Name: {{ order.full_name }}
+Total: GH₵ {{ order.total }}
+Delivery: {{ order.shipping_method.name }} (GH₵ {{ order.shipping_fee }})
+
+Items:
+{% for item in order.items.all %}- {{ item.title }} x {{ item.quantity }} — GH₵ {{ item.line_total }}
+{% endfor %}
+
+We’ll notify you when your order ships.
+
+If you have questions, reply to this email.
+
+— TBSS

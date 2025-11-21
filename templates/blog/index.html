@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="container">
+  <h1>Staff Picks</h1>
+  {% if posts %}
+  <div class="cards" style="margin-top:12px">
+    {% for p in posts %}
+    <article class="card">
+      {% if p.cover %}
+        <img src="{{ p.cover.url }}" alt="{{ p.title }}" style="width:100%;height:180px;object-fit:cover;border-radius:8px">
+      {% endif %}
+      <h3 style="margin:.5rem 0"><a href="{% url 'blog:detail' p.slug %}">{{ p.title }}</a></h3>
+      {% if p.staffer %}<p class="muted small">By {{ p.staffer }} · {{ p.published_at|date:"M j, Y" }}</p>{% endif %}
+      <p>{{ p.excerpt }}</p>
+    </article>
+    {% endfor %}
+  </div>
+  {% else %}
+    <p class="muted">No staff picks yet.</p>
+  {% endif %}
+</section>
+{% endblock %}

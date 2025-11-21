@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="container">
+  <h1>Your Orders</h1>
+  {% if orders %}
+  <div class="cards" style="margin-top:12px">
+    {% for o in orders %}
+    <article class="card" style="display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center">
+      <div>
+        <h3 style="margin:.25rem 0">#{{ o.order_number }}</h3>
+        <p class="muted small">Placed {{ o.created_at|date:"M j, Y H:i" }} · {{ o.shipping_method.name }}</p>
+        <p><strong>GH₵ {{ o.total }}</strong> · Status: {{ o.status|title }}</p>
+      </div>
+      <div>
+        <a class="btn" href="{% url 'accounts:order_detail' o.order_number %}">View</a>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+  {% else %}
+    <p class="muted">You have no orders yet.</p>
+  {% endif %}
+</section>
+{% endblock %}

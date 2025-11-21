@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="container prose">
+  <p class="small muted" style="margin-bottom:4px">
+    Staff pick · {{ post.published_at|date:"j M Y" }}{% if post.staffer %} · {{ post.staffer }}{% endif %}
+  </p>
+  <h1 style="margin:0 0 8px">{{ post.title }}</h1>
+  {% if post.excerpt %}
+    <p class="muted" style="margin:0 0 16px">{{ post.excerpt }}</p>
+  {% endif %}
+
+  {% if post.cover %}
+    <div style="margin:12px 0 20px">
+      <img src="{{ post.cover.url }}" alt="{{ post.title }}" style="width:100%;max-height:360px;object-fit:cover;border-radius:14px;box-shadow:var(--elev)">
+    </div>
+  {% endif %}
+
+  <article class="prose">
+    {{ post.body|linebreaks }}
+  </article>
+</section>
+{% endblock %}

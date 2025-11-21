@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="container">
+  <h1>Your Account</h1>
+
+  <div class="cards" style="margin-top:12px">
+    <article class="card">
+      <h3 style="margin:.25rem 0">Profile</h3>
+      <p class="muted small">{{ request.user.get_full_name|default:request.user.username }}</p>
+      <p class="muted small">{{ profile.phone|default:"Add phone" }}</p>
+      <a class="btn" href="{% url 'accounts:profile' %}">Edit profile</a>
+    </article>
+
+    <article class="card">
+      <h3 style="margin:.25rem 0">Orders</h3>
+      <p class="muted small">Total orders: {{ orders_count }}</p>
+      {% if orders %}
+        <ul class="small" style="padding-left:18px;margin:8px 0">
+          {% for o in orders %}
+          <li><a href="{% url 'accounts:order_detail' o.order_number %}">#{{ o.order_number }}</a> · GH₵ {{ o.total }} · {{ o.status|title }}</li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="muted small">No orders yet.</p>
+      {% endif %}
+      <a class="btn" href="{% url 'accounts:orders' %}">View all orders</a>
+    </article>
+
+    <article class="card">
+      <h3 style="margin:.25rem 0">Wishlist</h3>
+      <p class="muted small">Items saved: {{ wishlist_count }}</p>
+      <a class="btn" href="{% url 'accounts:wishlist' %}">View wishlist</a>
+    </article>
+  </div>
+
+  <div style="margin-top:16px">
+    <a class="btn" href="/catalog/">Continue shopping</a>
+  </div>
+</section>
+{% endblock %}

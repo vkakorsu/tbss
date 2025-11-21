@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+  <div class="container hero-inner">
+    <div>
+      <h1>Books that light the way</h1>
+      <p>Discover Ghanaian titles, African literature, and global favorites. Curated by TBSS staff.</p>
+      <div class="chips" style="margin:12px 0 16px">
+        <a class="chip" href="/catalog/?q=Ghana">Ghana</a>
+        <a class="chip" href="/catalog/?q=African%20literature">African Lit</a>
+        <a class="chip" href="/catalog/?q=Children">Children</a>
+        <a class="chip" href="/catalog/?q=School">School</a>
+        <a class="chip" href="/catalog/?q=Stationery">Stationery</a>
+      </div>
+      <a class="btn btn-hero" href="/catalog/"><i class="fa-solid fa-book-open" style="margin-right:8px"></i>Shop books</a>
+    </div>
+    <div class="hero-art collage">
+      <img src="/static/img/hero-art1.jpg" alt="" />
+      <img src="/static/img/hero-art2.jpg" alt="" />
+    </div>
+  </div>
+</section>
+
+<section class="featured container">
+  <h2>Featured</h2>
+  {% if featured_books %}
+  <div class="cards">
+    {% for b in featured_books %}
+    <article class="card">
+      <a href="{{ b.get_absolute_url }}" style="text-decoration:none;color:inherit;display:block">
+        {% if b.cover %}
+          <div class="cover" style="background-image:url('{{ b.cover.url }}');background-size:cover;background-position:center"></div>
+        {% else %}
+          <div class="cover ph"></div>
+        {% endif %}
+        <h3 style="margin:.5rem 0">{{ b.title }}</h3>
+        <p class="muted small">
+          {% for a in b.authors.all %}{% if not forloop.first %}, {% endif %}{{ a.name }}{% endfor %}
+        </p>
+        <p class="small">
+          {% if b.rating %}
+            {% with b.rating|floatformat:0 as r %}
+              {% for _ in "12345" %}{% if forloop.counter <= r %}&#9733;{% else %}&#9734;{% endif %}{% endfor %}
+              <span class="muted">({{ b.rating|floatformat:1 }})</span>
+            {% endwith %}
+          {% else %}
+            <span class="muted">No ratings yet</span>
+          {% endif %}
+        </p>
+      </a>
+    </article>
+    {% endfor %}
+  </div>
+  {% else %}
+    <p class="muted">No featured books yet. Mark some titles as "Featured" in admin to show them here.</p>
+  {% endif %}
+</section>
+{% endblock %}

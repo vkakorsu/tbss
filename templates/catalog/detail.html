@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="container">
+  <nav class="small muted" style="margin:8px 0"><a href="{% url 'catalog:index' %}">← Back to catalog</a></nav>
+  <div class="grid-2" style="align-items:start">
+    <div>
+      {% if book.cover %}
+        <img src="{{ book.cover.url }}" alt="{{ book.title }} cover" style="width:100%;max-width:420px;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.08)">
+      {% else %}
+        <div class="cover ph" style="height:420px"></div>
+      {% endif %}
+    </div>
+    <div>
+      <h1 style="margin-top:0">{{ book.title }}</h1>
+      <p class="muted">By {% for a in book.authors.all %}{% if not forloop.first %}, {% endif %}{{ a.name }}{% endfor %}</p>
+      <p><strong>GH₵ {{ book.price }}</strong></p>
+      <p>{% if book.in_stock %}<span style="color:green">In stock</span>{% else %}<span style="color:#a00">Out of stock</span>{% endif %} · ISBN {{ book.isbn }}</p>
+      <div style="display:flex;gap:8px;margin:12px 0;flex-wrap:wrap">
+        <a class="btn" href="{% url 'orders:cart_add' book.slug %}" {% if not book.in_stock %}aria-disabled="true" style="opacity:.6;pointer-events:none"{% endif %}>Add to cart</a>
+        <a class="btn" href="{% url 'accounts:wishlist_add' book.slug %}" style="background:var(--brand-2);color:var(--ink)">Add to wishlist</a>
+      </div>
+      <article class="prose">
+        <h3>Description</h3>
+        <p>{{ book.description|linebreaks }}</p>
+        {% if book.genres.exists %}
+        <p class="small muted">Genres:
+          {% for g in book.genres.all %}{% if not forloop.first %}, {% endif %}{{ g.name }}{% endfor %}
+        </p>
+        {% endif %}
+      </article>
+
+      <section style="margin-top:24px">
+        <h3>Customer reviews</h3>
+        {% with revs=book.reviews.all|dictsortreversed:"created_at" %}
+          {% for r in book.reviews.all %}
+            {% if r.is_approved %}
+            <div class="card" style="margin:8px 0;padding:12px">
+              <div class="small muted">Rated {{ r.rating }}/5 · {{ r.user.get_username }} · {{ r.created_at|date:"M j, Y" }}</div>
+              {% if r.title %}<h4 style="margin:.25rem 0">{{ r.title }}</h4>{% endif %}
+              <p>{{ r.body|linebreaks }}</p>
+            </div>
+            {% endif %}
+          {% empty %}
+            <p class="muted">No reviews yet.</p>
+          {% endfor %}
+        {% endwith %}
+
+        {% if request.user.is_authenticated %}
+        <form action="{% url 'reviews:add' book.slug %}" method="post" style="margin-top:12px;display:grid;gap:8px">
+          {% csrf_token %}
+          <div>
+            <label class="small muted">Rating</label>
+            <select name="rating">
+              <option value="5">5</option>
+              <option value="4">4</option>
+              <option value="3">3</option>
+              <option value="2">2</option>
+              <option value="1">1</option>
+            </select>
+          </div>
+          <input type="text" name="title" placeholder="Title (optional)">
+          <textarea name="body" placeholder="Write your review" required></textarea>
+          <button class="btn" type="submit">Submit review</button>
+        </form>
+        {% else %}
+          <p class="small muted">Please <a href="/accounts/login/?next={{ request.path }}">log in</a> to review.</p>
+        {% endif %}
+      </section>
+    </div>
+  </div>
+</section>
+{% endblock %}
