@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="container" style="min-height: 70vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 48px 20px;">
+  <div style="margin-bottom: 24px;">
+    <i class="fa-solid fa-book-open" style="font-size: 4rem; color: var(--brand-2); opacity: 0.7;"></i>
+  </div>
+  <h1 style="font-size: 5rem; margin: 0; color: var(--brand); line-height: 1;">404</h1>
+  <h2 style="margin: 8px 0 16px; font-size: 1.5rem; font-weight: 600;">Page not found</h2>
+  <p class="muted" style="max-width: 420px; margin: 0 0 24px;">
+    Sorry, we couldn't find the page you're looking for. It may have been moved, or perhaps the link was mistyped.
+  </p>
+  <div style="display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;">
+    <a href="/" class="btn btn-hero">Back to Home</a>
+    <a href="/catalog/" class="chip" style="padding: 12px 18px;">Browse Catalog</a>
+  </div>
+</section>
+{% endblock %}
