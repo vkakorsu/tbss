@@ -1,4 +1,4 @@
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.http import JsonResponse
 from django.views.generic import ListView, DetailView, View
 from .models import Book, Author, Genre
@@ -77,6 +77,40 @@ class BookDetailView(DetailView):
     template_name = "catalog/detail.html"
     slug_field = "slug"
     slug_url_kwarg = "slug"
+
+    def get_queryset(self):
+        return (
+            Book.objects.select_related("publisher")
+            .prefetch_related("authors", "genres", "tags")
+            .filter(is_active=True)
+        )
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        book = self.object
+        # Compute related books by weighted overlap: authors (3), genres (2), tags (1)
+        related_qs = (
+            Book.objects.filter(is_active=True)
+            .exclude(pk=book.pk)
+            .annotate(
+                author_overlap=Count("authors", filter=Q(authors__in=book.authors.all()), distinct=True),
+            )
+            .annotate(
+                genre_overlap=Count("genres", filter=Q(genres__in=book.genres.all()), distinct=True),
+            )
+            .annotate(
+                tag_overlap=Count("tags", filter=Q(tags__in=book.tags.all()), distinct=True),
+            )
+            .annotate(score=(3 * Count("authors", filter=Q(authors__in=book.authors.all()), distinct=True)
+                             + 2 * Count("genres", filter=Q(genres__in=book.genres.all()), distinct=True)
+                             + 1 * Count("tags", filter=Q(tags__in=book.tags.all()), distinct=True)))
+            .filter(Q(author_overlap__gt=0) | Q(genre_overlap__gt=0) | Q(tag_overlap__gt=0))
+            .select_related("publisher")
+            .prefetch_related("authors", "genres", "tags")
+            .order_by("-score", "-rating", "title")[:8]
+        )
+        ctx["related_books"] = related_qs
+        return ctx
 
 
 class SuggestView(View):

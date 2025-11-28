@@ -1,148 +1,306 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Torchbearers Books & Stationery Services</title>
-  <meta name="description" content="TBSS - Ghanaian bookshop: books, stationery, events, and community.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/static/css/styles.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
-  <meta property="og:title" content="TBSS - Torchbearers Books & Stationery Services">
-  <meta property="og:description" content="Discover books and staff picks from Ghana and beyond.">
-  <meta property="og:type" content="website">
-  <meta property="og:image" content="/static/img/og.jpg">
-  <link rel="icon" href="/static/img/favicon.ico">
-</head>
-<body>
-  <header class="site-header">
-    <div class="container header-inner">
-      <a class="brand" href="/">
-        <img src="/static/img/logo.jpg" alt="TBSS Logo" style="width:48px;height:48px">
-        <span class="brand-text">Torchbearers Books</span>
-      </a>
-      <nav class="nav">
-        <a href="/catalog/" class="{% if request.path|slice:':9' == '/catalog/' %}active{% endif %}">Catalog</a>
-        <a href="/blog/" class="{% if request.path|slice:':6' == '/blog/' %}active{% endif %}">Staff Picks</a>
-        <a href="/about/" class="{% if request.path == '/about/' %}active{% endif %}">About</a>
-      </nav>
-      <div class="header-actions">
-        <form action="/catalog/" method="get" class="search">
-          <input id="tbss-search" type="search" name="q" placeholder="Search books, authors, tags" autocomplete="off" aria-label="Search" data-suggest-url="/catalog/suggest/">
-          <div id="tbss-suggest" class="suggestions" role="listbox" aria-label="Search suggestions"></div>
-        </form>
-        <a href="/orders/cart/" class="cart" aria-label="Cart">
-          <i class="fa-solid fa-shopping-bag"></i>
-          {% if cart_count %}<span class="cart-badge">{{ cart_count }}</span>{% endif %}
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Torchbearers Books & Stationery Services</title>
+    <meta
+      name="description"
+      content="TBSS - Ghanaian bookshop: books, stationery, events, and community."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/static/css/styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <meta
+      property="og:title"
+      content="TBSS - Torchbearers Books & Stationery Services"
+    />
+    <meta
+      property="og:description"
+      content="Discover books and staff picks from Ghana and beyond."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="/static/img/og.jpg" />
+    <link rel="icon" href="/static/img/favicon.ico" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="/">
+          <img
+            src="/static/img/logo.jpg"
+            alt="TBSS Logo"
+            style="width: 48px; height: 48px"
+          />
+          <span class="brand-text">Torchbearers Books</span>
         </a>
-        <div class="account-menu">
-          <button type="button" class="icon-btn" id="account-toggle" aria-label="Account" aria-haspopup="true" aria-expanded="false">
-            {% if request.user.is_authenticated %}
+        <nav class="nav">
+          <a
+            href="/catalog/"
+            class="{% if request.path|slice:':9' == '/catalog/' %}active{% endif %}"
+            >Catalog</a
+          >
+          <a
+            href="/blog/"
+            class="{% if request.path|slice:':6' == '/blog/' %}active{% endif %}"
+            >Staff Picks</a
+          >
+          <a
+            href="/about/"
+            class="{% if request.path == '/about/' %}active{% endif %}"
+            >About</a
+          >
+        </nav>
+        <div class="header-actions">
+          <form action="/catalog/" method="get" class="search">
+            <input
+              id="tbss-search"
+              type="search"
+              name="q"
+              placeholder="Search books, authors, tags"
+              autocomplete="off"
+              aria-label="Search"
+              data-suggest-url="/catalog/suggest/"
+            />
+            <div
+              id="tbss-suggest"
+              class="suggestions"
+              role="listbox"
+              aria-label="Search suggestions"
+            ></div>
+          </form>
+          <a href="/orders/cart/" class="cart" aria-label="Cart">
+            <i class="fa-solid fa-shopping-bag"></i>
+            {% if cart_count %}<span class="cart-badge">{{ cart_count }}</span
+            >{% endif %}
+          </a>
+          <div class="account-menu">
+            <button
+              type="button"
+              class="icon-btn"
+              id="account-toggle"
+              aria-label="Account"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              {% if request.user.is_authenticated %}
               {% with n=request.user.get_full_name|default:request.user.username %}
-                {% if n %}{{ n|first|upper }}{% else %}<i class="fa-regular fa-user"></i>{% endif %}
+              {% if n %}{{ n|first|upper }}{% else %}<i class="fa-regular fa-user"></i>{% endif %}
               {% endwith %}
-            {% else %}
+              {% else %}
               <i class="fa-regular fa-user"></i>
-            {% endif %}
-          </button>
-          <div class="account-dropdown" id="account-dropdown">
-            {% if request.user.is_authenticated %}
+              {% endif %}
+            </button>
+            <div class="account-dropdown" id="account-dropdown">
+              {% if request.user.is_authenticated %}
               <a href="/accounts/">Your account</a>
               <a href="{% url 'account_logout' %}">Logout</a>
-            {% else %}
+              {% else %}
               <a href="{% url 'account_login' %}">Login</a>
               <a href="{% url 'account_signup' %}">Sign up</a>
-            {% endif %}
+              {% endif %}
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </header>
+    </header>
 
-  <main>
-    {% if messages %}
-    <div class="container alerts">
-      {% for message in messages %}
+    <main>
+      {% if messages %}
+      <div class="container alerts">
+        {% for message in messages %}
         <div class="alert alert-{{ message.tags|default:'info' }}" role="alert">
           <span class="icon">
-            {% if 'success' in message.tags %}<i class="fa-solid fa-circle-check"></i>{% endif %}
-            {% if 'info' in message.tags %}<i class="fa-solid fa-circle-info"></i>{% endif %}
-            {% if 'warning' in message.tags %}<i class="fa-solid fa-triangle-exclamation"></i>{% endif %}
-            {% if 'error' in message.tags %}<i class="fa-solid fa-circle-exclamation"></i>{% endif %}
+            {% if 'success' in message.tags %}<i
+              class="fa-solid fa-circle-check"
+            ></i
+            >{% endif %} {% if 'info' in message.tags %}<i
+              class="fa-solid fa-circle-info"
+            ></i
+            >{% endif %} {% if 'warning' in message.tags %}<i
+              class="fa-solid fa-triangle-exclamation"
+            ></i
+            >{% endif %} {% if 'error' in message.tags %}<i
+              class="fa-solid fa-circle-exclamation"
+            ></i
+            >{% endif %}
           </span>
           <span class="msg">{{ message }}</span>
-          <button type="button" class="close" aria-label="Dismiss">&times;</button>
+          <button type="button" class="close" aria-label="Dismiss">
+            &times;
+          </button>
         </div>
-      {% endfor %}
-    </div>
-    {% endif %}
-    {% block content %}{% endblock %}
-  </main>
+        {% endfor %}
+      </div>
+      {% endif %} {% block content %}{% endblock %}
+    </main>
 
-  <footer class="site-footer">
-    <div class="container footer-grid">
-      <div class="f-brand">
-        <div class="brand-row">
-          <strong>Torchbearers Books & Stationery Services</strong>
+    <footer class="site-footer">
+      <div class="container footer-grid">
+        <div class="f-brand">
+          <div class="brand-row">
+            <strong>Torchbearers Books & Stationery Services</strong>
+          </div>
+          <p>
+            Warm stories, local voices, and community. A Ghanaian bookshop and
+            cultural hub.
+          </p>
+          <div
+            style="
+              margin-top: 8px;
+              border-radius: 10px;
+              overflow: hidden;
+              max-width: 420px;
+            "
+          >
+            <iframe
+              title="TBSS map"
+              src="https://www.google.com/maps?q=6.594215491560995, 0.4718850376097446&output=embed"
+              width="100%"
+              height="160"
+              style="border: 0"
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+            ></iframe>
+          </div>
+          <div style="margin-top: 12px">
+            <h4>Follow us</h4>
+            <div class="social">
+              <a href="#" aria-label="Facebook" target="_blank"
+                ><i class="fa-brands fa-facebook"></i
+              ></a>
+              <a
+                href="https://www.instagram.com/tbssgh/"
+                aria-label="Instagram"
+                target="_blank"
+                ><i class="fa-brands fa-instagram"></i
+              ></a>
+              <a href="#" aria-label="X (Twitter)" target="_blank"
+                ><i class="fa-brands fa-x-twitter"></i
+              ></a>
+              <a href="#" aria-label="YouTube" target="_blank"
+                ><i class="fa-brands fa-youtube"></i
+              ></a>
+            </div>
+          </div>
         </div>
-        <p>Warm stories, local voices, and community.
-        A Ghanaian bookshop and cultural hub.</p>
-      </div>
-      <div class="f-social">
-        <h4>Follow us</h4>
-        <div class="social">
-          <a href="#" aria-label="Facebook" target="_blank"><i class="fa-brands fa-facebook"></i></a>
-          <a href="https://www.instagram.com/tbssgh/" aria-label="Instagram" target="_blank"><i class="fa-brands fa-instagram"></i></a>
-          <a href="#" aria-label="X (Twitter)" target="_blank"><i class="fa-brands fa-x-twitter"></i></a>
-          <a href="#" aria-label="YouTube" target="_blank"><i class="fa-brands fa-youtube"></i></a>
+        <div class="f-contact">
+          <h4>Contact</h4>
+          <ul
+            style="
+              list-style: none;
+              padding: 0;
+              margin: 0;
+              display: grid;
+              gap: 8px;
+            "
+          >
+            <li style="display: flex; gap: 8px; align-items: start">
+              <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
+              <span class="muted small">Ho, Ghana</span>
+            </li>
+            <li style="display: flex; gap: 8px; align-items: center">
+              <i class="fa-solid fa-envelope" aria-hidden="true"></i>
+              <a class="small" href="mailto:hello@tbss.com">hello@tbss.com</a>
+            </li>
+            <li style="display: flex; gap: 8px; align-items: center">
+              <i class="fa-solid fa-phone" aria-hidden="true"></i>
+              <a class="small" href="tel:+233200000000">+233 20 000 0000</a>
+            </li>
+            <li style="display: flex; gap: 8px; align-items: center">
+              <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+              <a
+                class="small"
+                href="https://wa.me/233200000000"
+                target="_blank"
+                rel="noopener"
+                >WhatsApp us</a
+              >
+            </li>
+          </ul>
+        </div>
+        <div class="f-hours">
+          <h4>Opening hours</h4>
+          <ul
+            class="small muted"
+            style="
+              list-style: none;
+              padding: 0;
+              margin: 0;
+              display: grid;
+              gap: 4px;
+            "
+          >
+            <li>Mon–Fri: 9:00 – 18:00</li>
+            <li>Sat: 10:00 – 16:00</li>
+            <li>Sun & holidays: Closed</li>
+          </ul>
+        </div>
+        <div class="f-news">
+          <h4>Newsletter</h4>
+          <form
+            action="/newsletter/subscribe/"
+            method="post"
+            class="inline-form"
+          >
+            {% csrf_token %}
+            <input
+              type="email"
+              name="email"
+              placeholder="Email address"
+              required
+            />
+            <button type="submit" class="btn">Subscribe</button>
+          </form>
         </div>
       </div>
-      <div class="f-contact">
-        <h4>Contact</h4>
-        <p class="muted small">Ho, Ghana</p>
-        <p class="muted small">Email: hello@tbss.com</p>
+      <div class="container muted small fineprint">
+        &copy; {% now "Y" %} TBSS · All rights reserved.
       </div>
-      <div class="f-news">
-        <h4>Newsletter</h4>
-        <form action="/newsletter/subscribe/" method="post" class="inline-form">
-          {% csrf_token %}
-          <input type="email" name="email" placeholder="Email address" required>
-          <button type="submit" class="btn">Subscribe</button>
-        </form>
-      </div>
-    </div>
-    <div class="container muted small fineprint">&copy; {% now "Y" %} TBSS · All rights reserved.</div>
-  </footer>
-  <script src="/static/js/autocomplete.js"></script>
-  <script>
-    (function(){
-      document.querySelectorAll('.alert .close').forEach(function(btn){
-        btn.addEventListener('click', function(){ btn.parentElement.remove(); });
-      });
-      setTimeout(function(){
-        document.querySelectorAll('.alert').forEach(function(a){ a.classList.add('fade'); setTimeout(()=>a.remove(), 400); });
-      }, 4000);
-
-      var accToggle = document.getElementById('account-toggle');
-      var accMenu = document.getElementById('account-dropdown');
-      if(accToggle && accMenu){
-        accToggle.addEventListener('click', function(e){
-          e.stopPropagation();
-          var open = accMenu.classList.toggle('open');
-          accToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    </footer>
+    <script src="/static/js/autocomplete.js"></script>
+    <script>
+      (function () {
+        document.querySelectorAll(".alert .close").forEach(function (btn) {
+          btn.addEventListener("click", function () {
+            btn.parentElement.remove();
+          });
         });
-        document.addEventListener('click', function(e){
-          if(!accMenu.contains(e.target) && e.target !== accToggle){
-            if(accMenu.classList.contains('open')){
-              accMenu.classList.remove('open');
-              accToggle.setAttribute('aria-expanded', 'false');
+        setTimeout(function () {
+          document.querySelectorAll(".alert").forEach(function (a) {
+            a.classList.add("fade");
+            setTimeout(() => a.remove(), 400);
+          });
+        }, 4000);
+
+        var accToggle = document.getElementById("account-toggle");
+        var accMenu = document.getElementById("account-dropdown");
+        if (accToggle && accMenu) {
+          accToggle.addEventListener("click", function (e) {
+            e.stopPropagation();
+            var open = accMenu.classList.toggle("open");
+            accToggle.setAttribute("aria-expanded", open ? "true" : "false");
+          });
+          document.addEventListener("click", function (e) {
+            if (!accMenu.contains(e.target) && e.target !== accToggle) {
+              if (accMenu.classList.contains("open")) {
+                accMenu.classList.remove("open");
+                accToggle.setAttribute("aria-expanded", "false");
+              }
             }
-          }
-        });
-      }
-    })();
-  </script>
-</body>
+          });
+        }
+      })();
+    </script>
+  </body>
 </html>

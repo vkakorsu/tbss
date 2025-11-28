@@ -102,6 +102,7 @@ class Book(TimeStampedModel):
     cover = models.ImageField(upload_to=book_cover_upload, blank=True)
     stock = models.PositiveIntegerField(default=0)
     rating = models.FloatField(default=0.0)
+    page_count = models.PositiveIntegerField(null=True, blank=True)
 
     is_active = models.BooleanField(default=True)
     is_featured = models.BooleanField(default=False)

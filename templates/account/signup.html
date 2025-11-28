@@ -1,19 +1,42 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% block content %}
-<section class="container" style="max-width:560px">
-  <h1>Create account</h1>
-  <p class="muted">Join TBSS to save wishlists and orders.</p>
-  <form method="post" action="{% url 'account_signup' %}" style="display:grid;gap:12px;margin-top:12px">
-    {% csrf_token %}
-    {{ form.non_field_errors }}
-    {% for field in form %}
-      {{ field.label_tag }}
-      {{ field }}
-      {% if field.errors %}<div class="small" style="color:#a00">{{ field.errors|striptags }}</div>{% endif %}
-    {% endfor %}
-    <button class="btn" type="submit">Sign up</button>
-  </form>
-  <p class="small muted" style="margin-top:12px">Already have an account? <a href="{% url 'account_login' %}">Sign in</a>.</p>
+<section class="container" style="min-height:70vh;display:grid;place-items:center;padding:24px">
+  <style>
+    .auth-card input[type="text"],
+    .auth-card input[type="email"],
+    .auth-card input[type="password"] {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #e2e2e2;
+      border-radius: 8px;
+      background: #fff;
+      outline: none;
+      transition: box-shadow .15s ease, border-color .15s ease;
+    }
+    .auth-card input[type="text"]:focus,
+    .auth-card input[type="email"]:focus,
+    .auth-card input[type="password"]:focus {
+      border-color: var(--brand, #6b8afd);
+      box-shadow: 0 0 0 3px rgba(107,138,253,.15);
+    }
+  </style>
+  <div class="card auth-card" style="width:100%;max-width:520px;padding:20px;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.08)">
+    <h1 style="margin:0">Create account</h1>
+    <p class="muted" style="margin:.25rem 0 1rem">Join TBSS to save wishlists and orders.</p>
+    <form method="post" action="{% url 'account_signup' %}" style="display:grid;gap:12px">
+      {% csrf_token %}
+      {{ form.non_field_errors }}
+      {% for field in form %}
+        <div style="display:grid;gap:4px">
+          {{ field.label_tag }}
+          {{ field }}
+          {% if field.errors %}<div class="small" style="color:#a00">{{ field.errors|striptags }}</div>{% endif %}
+        </div>
+      {% endfor %}
+      <button class="btn" type="submit">Sign up</button>
+    </form>
+    <p class="small muted" style="margin-top:12px">Already have an account? <a href="{% url 'account_login' %}">Sign in</a>.</p>
+  </div>
 </section>
 {% endblock %}

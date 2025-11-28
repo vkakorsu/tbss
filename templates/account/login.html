@@ -1,22 +1,48 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% block content %}
-<section class="container" style="max-width:560px">
-  <h1>Login</h1>
-  <p class="muted">Welcome back.</p>
-  <form method="post" action="{% url 'account_login' %}" style="display:grid;gap:12px;margin-top:12px">
-    {% csrf_token %}
-    {{ form.non_field_errors }}
-    {{ form.login.label_tag }}
-    {{ form.login }}
-    {{ form.password.label_tag }}
-    {{ form.password }}
-    <div style="display:flex;justify-content:space-between;align-items:center">
-      <label class="small"><input type="checkbox" name="remember" id="id_remember"> Remember me</label>
-      <a class="small" href="{% url 'account_reset_password' %}">Forgot password?</a>
-    </div>
-    <button class="btn" type="submit">Sign in</button>
-  </form>
-  <p class="small muted" style="margin-top:12px">Don't have an account? <a href="{% url 'account_signup' %}">Sign up</a>.</p>
+<section class="container" style="min-height:70vh;display:grid;place-items:center;padding:24px">
+  <style>
+    .auth-card input[type="text"],
+    .auth-card input[type="email"],
+    .auth-card input[type="password"] {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #e2e2e2;
+      border-radius: 8px;
+      background: #fff;
+      outline: none;
+      transition: box-shadow .15s ease, border-color .15s ease;
+    }
+    .auth-card input[type="text"]:focus,
+    .auth-card input[type="email"]:focus,
+    .auth-card input[type="password"]:focus {
+      border-color: var(--brand, #6b8afd);
+      box-shadow: 0 0 0 3px rgba(107,138,253,.15);
+    }
+  </style>
+  <div class="card auth-card" style="width:100%;max-width:440px;padding:20px;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.08)">
+    <h1 style="margin:0">Sign in</h1>
+    <p class="muted" style="margin:.25rem 0 1rem">Welcome back. Please enter your details.</p>
+    <form method="post" action="{% url 'account_login' %}" style="display:grid;gap:12px">
+      {% csrf_token %}
+      {{ form.non_field_errors }}
+      <div style="display:grid;gap:4px">
+        {{ form.login.label_tag }}
+        {{ form.login }}
+      </div>
+      <div style="display:grid;gap:4px">
+        {{ form.password.label_tag }}
+        {{ form.password }}
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px">
+        <label class="small"><input type="checkbox" name="remember" id="id_remember"> Remember me</label>
+        <a class="small" href="{% url 'account_reset_password' %}">Forgot password?</a>
+      </div>
+      <button class="btn" type="submit">Sign in</button>
+    </form>
+    <p class="small muted" style="margin-top:12px">Don't have an account? <a href="{% url 'account_signup' %}">Sign up</a>.</p>
+  </div>
+  
 </section>
 {% endblock %}
