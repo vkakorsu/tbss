@@ -62,6 +62,9 @@
           >
         </nav>
         <div class="header-actions">
+          <button type="button" class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Menu">
+            <i class="fa-solid fa-bars"></i>
+          </button>
           <form action="/catalog/" method="get" class="search">
             <input
               id="tbss-search"
@@ -114,6 +117,32 @@
         </div>
       </div>
     </header>
+
+    <!-- Mobile navigation -->
+    <div class="mobile-nav" id="mobile-nav">
+      <div class="mobile-nav-inner">
+        <button type="button" class="mobile-nav-close" id="mobile-nav-close" aria-label="Close menu">&times;</button>
+        <div class="mobile-search">
+          <form action="/catalog/" method="get">
+            <input type="search" name="q" placeholder="Search books, authors, tags" aria-label="Search">
+          </form>
+        </div>
+        <nav class="mobile-nav-links">
+          <a href="/catalog/" class="{% if request.path|slice:':9' == '/catalog/' %}active{% endif %}">Catalog</a>
+          <a href="/blog/" class="{% if request.path|slice:':6' == '/blog/' %}active{% endif %}">Staff Picks</a>
+          <a href="/about/" class="{% if request.path == '/about/' %}active{% endif %}">About</a>
+          {% if request.user.is_authenticated %}
+          <a href="/accounts/">Your account</a>
+          <a href="/accounts/wishlist/">Wishlist</a>
+          <a href="/orders/cart/">Cart</a>
+          <a href="{% url 'account_logout' %}">Logout</a>
+          {% else %}
+          <a href="{% url 'account_login' %}">Login</a>
+          <a href="{% url 'account_signup' %}">Sign up</a>
+          {% endif %}
+        </nav>
+      </div>
+    </div>
 
     <main>
       {% if messages %}
@@ -282,6 +311,27 @@
             setTimeout(() => a.remove(), 400);
           });
         }, 4000);
+
+        // Mobile menu
+        var mobileToggle = document.getElementById("mobile-menu-toggle");
+        var mobileNav = document.getElementById("mobile-nav");
+        var mobileClose = document.getElementById("mobile-nav-close");
+        if (mobileToggle && mobileNav) {
+          mobileToggle.addEventListener("click", function() {
+            mobileNav.classList.add("open");
+            document.body.style.overflow = "hidden";
+          });
+          mobileClose.addEventListener("click", function() {
+            mobileNav.classList.remove("open");
+            document.body.style.overflow = "";
+          });
+          mobileNav.addEventListener("click", function(e) {
+            if (e.target === mobileNav) {
+              mobileNav.classList.remove("open");
+              document.body.style.overflow = "";
+            }
+          });
+        }
 
         var accToggle = document.getElementById("account-toggle");
         var accMenu = document.getElementById("account-dropdown");
