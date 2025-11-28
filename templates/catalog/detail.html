@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-<section class="container" style="overflow-x:hidden">
+<section class="container">
   <nav class="small muted" style="margin:8px 0"><a href="{% url 'catalog:index' %}">← Back to catalog</a></nav>
   <div class="grid-2" style="align-items:start">
     <div>
@@ -14,7 +14,7 @@
       <h1 style="margin-top:0">{{ book.title }}</h1>
       <p class="muted">By {% for a in book.authors.all %}{% if not forloop.first %}, {% endif %}{{ a.name }}{% endfor %}</p>
       <p><strong>GH₵ {{ book.price }}</strong></p>
-      <p style="word-break:break-word">{% if book.in_stock %}<span style="color:green">In stock</span>{% else %}<span style="color:#a00">Out of stock</span>{% endif %} · ISBN {{ book.isbn }}</p>
+      <p>{% if book.in_stock %}<span style="color:green">In stock</span>{% else %}<span style="color:#a00">Out of stock</span>{% endif %} · ISBN {{ book.isbn }}</p>
       <p class="small muted">
         {% if book.published_at %}Published {{ book.published_at|date:"M j, Y" }}{% endif %}
         {% if book.publisher %}{% if book.published_at %} · {% endif %}Publisher: {{ book.publisher.name }}{% endif %}
@@ -74,7 +74,7 @@
       {% if related_books %}
       <section style="margin-top:24px">
         <h3>Related books</h3>
-        <div style="display:flex;gap:12px;overflow-x:auto;padding-bottom:6px;scroll-snap-type:x proximity;margin:0 -16px;padding-left:16px;padding-right:16px">
+        <div style="display:flex;gap:12px;overflow-x:auto;padding-bottom:6px;scroll-snap-type:x proximity">
           {% for rb in related_books %}
           <a href="{{ rb.get_absolute_url }}" class="card" style="flex:0 0 200px;scroll-snap-align:start;display:block;padding:8px;text-decoration:none">
             {% if rb.cover %}
