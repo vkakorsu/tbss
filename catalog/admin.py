@@ -12,37 +12,37 @@ from io import TextIOWrapper
 class AuthorAdmin(admin.ModelAdmin):
     list_display = ("name", "created_at")
     search_fields = ("name",)
-    prepopulated_fields = {"slug": ("name",)}
+    exclude = ("slug", "bio")
 
 
 @admin.register(Publisher)
 class PublisherAdmin(admin.ModelAdmin):
-    list_display = ("name", "website")
+    list_display = ("name",)
     search_fields = ("name",)
-    prepopulated_fields = {"slug": ("name",)}
+    exclude = ("slug", "website")
 
 
 @admin.register(Genre)
 class GenreAdmin(admin.ModelAdmin):
     list_display = ("name",)
     search_fields = ("name",)
-    prepopulated_fields = {"slug": ("name",)}
+    exclude = ("slug",)
 
 
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
     list_display = ("name",)
     search_fields = ("name",)
-    prepopulated_fields = {"slug": ("name",)}
+    exclude = ("slug",)
 
 
 @admin.register(Book)
 class BookAdmin(admin.ModelAdmin):
-    list_display = ("title", "isbn", "price", "stock", "is_active", "cover_preview")
+    list_display = ("title", "isbn", "price", "stock", "shelf_number", "stock_value", "is_active", "cover_preview")
     list_filter = ("is_active", "genres", "publisher")
     search_fields = ("title", "isbn", "authors__name")
     filter_horizontal = ("authors", "genres", "tags")
-    prepopulated_fields = {"slug": ("title",)}
+    exclude = ("slug",)
     actions = ["increase_stock_5", "decrease_stock_5"]
 
     def cover_preview(self, obj):
@@ -50,6 +50,11 @@ class BookAdmin(admin.ModelAdmin):
             return format_html('<img src="{}" style="height:50px;border-radius:4px;"/>', obj.cover.url)
         return ""
     cover_preview.short_description = "Cover"
+
+    def stock_value(self, obj):
+        """Calculate stock * price for inventory management."""
+        return obj.stock * obj.price if obj.stock and obj.price else 0
+    stock_value.short_description = "Stock Value"
 
     class CsvImportForm(forms.Form):
         csv_file = forms.FileField()

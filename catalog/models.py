@@ -101,6 +101,7 @@ class Book(TimeStampedModel):
     price = models.DecimalField(max_digits=10, decimal_places=2)
     cover = models.ImageField(upload_to=book_cover_upload, blank=True)
     stock = models.PositiveIntegerField(default=0)
+    shelf_number = models.CharField(max_length=50, blank=True, help_text="Shelf location in the store")
     rating = models.FloatField(default=0.0)
     page_count = models.PositiveIntegerField(null=True, blank=True)
 
