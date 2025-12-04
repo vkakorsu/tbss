@@ -1,6 +1,6 @@
 from .base import *  # noqa
 
-DEBUG = True
+DEBUG = False
 ALLOWED_HOSTS = ["*"]
 EMAIL_BACKEND = "anymail.backends.console.EmailBackend"
 
